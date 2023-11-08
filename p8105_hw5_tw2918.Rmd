@@ -53,3 +53,18 @@ homicide_df = read_csv("./data/homicide-data.csv") |>
 
 ### Create a city_state variable (e.g. “Baltimore, MD”) and then summarize within cities to obtain the total number of homicides and the number of unsolved homicides (those for which the disposition is “Closed without arrest” or “Open/No arrest”).
 
+```{r}
+homicide_df = homicide_df |>
+  mutate(city_state = paste(city, state, sep = ", "))
+
+homicide_df|>
+  group_by(city_state)|>
+  summarise(
+    total_homicides = sum(disposition %in% c("Closed by arrest","Closed without arrest", "Open/No arrest"), na.rm = TRUE),
+    unsolved_homicides = sum(disposition %in% c("Closed without arrest", "Open/No arrest"), na.rm = TRUE)
+    )|>
+    knitr::kable()
+```
+
+
+
