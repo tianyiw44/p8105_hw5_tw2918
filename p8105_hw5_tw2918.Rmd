@@ -25,3 +25,31 @@ options(
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
+
+## Probelm 1
+### Describe the raw data.
+
+**Import and Clean Dataset**
+
+* update the victim's first and last name to proper case
+* replace unknown to missing value NA
+* update victim_age to numeric variable
+
+```{r}
+homicide_df = read_csv("./data/homicide-data.csv") |>
+  janitor::clean_names()|>
+  mutate (
+    victim_last = str_to_title(victim_last),
+    victim_first = str_to_title(victim_first),
+    across(c(uid, victim_last, victim_first, victim_race, victim_age, victim_sex, city, state, disposition), ~na_if(., "Unknown")),
+    victim_age = as.numeric(victim_age)
+  )
+```
+
+**Describe the raw data**
+
+* The datasaet contains data on homicides in 50 large U.S. cities from  2007 to 2017. The dataset contains `r nrow(homicide_df)` total observations and `r ncol(homicide_df)` variables. 
+* The variable records the id number of the cases (`uid`), the report date (`reported_date`),cities and state of the cases (`city` and `state`), the detailed case location (`lat` and `lon`) and the case status on whether it is open and closed (`disposition`). It also recoreds victim's name (`victim_last` and `victim_first`), race (`victim_race`), age (`victim_age`) and gender(`victim_sex`). 
+
+### Create a city_state variable (e.g. “Baltimore, MD”) and then summarize within cities to obtain the total number of homicides and the number of unsolved homicides (those for which the disposition is “Closed without arrest” or “Open/No arrest”).
+
