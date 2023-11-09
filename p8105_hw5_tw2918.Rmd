@@ -100,3 +100,20 @@ homicide_city = homicide_disposition |>
 print(homicide_city)
 ```
 
+### Create a plot that shows the estimates and CIs for each city – check out geom_errorbar for a way to add error bars based on the upper and lower limits. Organize cities according to the proportion of unsolved homicides.
+
+```{r}
+homicide_city |>
+  mutate(city_state = reorder(city_state, estimate))|>
+  ggplot(aes(x=city_state, y =estimate)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high))+
+  labs(
+    title = "Proportion Estimate and Confidance Interval of Unsolved Homicides In US Cities ",
+    x = "Cities and States",
+    y = "Proportion Estimate",
+  ) +
+  theme(axis.text.x =element_text(angle = 90, hjust = 1))
+  
+```
+
