@@ -64,8 +64,7 @@ homicide_disposition = homicide_df|>
     unsolved_homicides = sum(disposition %in% c("Closed without arrest", "Open/No arrest"), na.rm = TRUE)
     )
 
-homicide_disposition|>
-  knitr::kable()
+print(homicide_disposition)
 ```
 
 ### For the city of Baltimore, MD, use the prop.test function to estimate the proportion of homicides that are unsolved; save the output of prop.test as an R object, apply the broom::tidy to this object and pull the estimated proportion and confidence intervals from the resulting tidy dataframe.
@@ -85,5 +84,19 @@ prop_test_baltimore = prop.test(unsovled, total)|>
   select(estimate, conf.low, conf.high)
 
 print(prop_test_baltimore)
+```
+
+### run prop.test for each of the cities in the dataset, and extract both the proportion of unsolved homicides and the confidence interval for each. Do this within a “tidy” pipeline, making use of purrr::map, purrr::map2, list columns and unnest as necessary to create a tidy dataframe with estimated proportions and CIs for each city.
+
+```{r}
+homicide_city = homicide_disposition |>
+  mutate(
+    prop_test_city = map2(unsolved_homicides, total_homicides, ~prop.test(.x,.y)),
+    tidy_test_city = map(prop_test_city, broom::tidy)
+  )|>
+  unnest(tidy_test_city)|>
+  select(city_state, estimate, conf.low, conf.high)
+  
+print(homicide_city)
 ```
 
