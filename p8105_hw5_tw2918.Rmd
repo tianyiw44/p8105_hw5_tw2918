@@ -261,7 +261,33 @@ sim_results_all |>
 * The plot shows a positive association between effect size and power that as the true value of μ increases, the power of the test also increases, indicating larger effect sizes are easier to detect. When the effect size is small (values of μ close to 0), the test has less power, which means it is less likely to reject the null hypothesis even if it is false. As the effect size grows, the test becomes more likely to reject the null hypothesis.
 * The plot shows that the the slope or the increase in power is getting flatter, as the true value μ gets large, suggesting that once the effect size is sufficiently large, further increases in the effect size do not substantially increase power, likely because the power is already close to 1. At this point, the test will almost always correctly reject the null hypothesis.
 
+### Make a plot showing the average estimate of μ̂ on the y axis and the true value of μ on the x axis, and the average estimate of μ̂ only in samples for which the null was rejected on the y axis and the true value of μ on the x axis
 
+```{r}
+sim_results_all |>
+  group_by(mu)|>
+  summarize (
+    average_estimate_all = mean(estimate),
+    average_estimate_rejected = mean(estimate[p_value < alpha])
+    )|>
+  pivot_longer(
+    average_estimate_all: average_estimate_rejected,
+    names_to = "average_estimate_group",
+    names_prefix = "average_estimate_",
+    values_to = "average_estimate_value"
+  )|>
+  ggplot(aes(x = mu, y = average_estimate_value, color = average_estimate_group))+
+  geom_point() +
+  geom_line() +
+  labs(
+    title = "Average Estimate of μ Hat Over True Value of μ ",
+    x = "True Value of μ",
+    y = "Average Estimate of μ Hat"
+    ) 
+```
 
+*Result*
 
-
+* From the plot, it appears that the average estimate of when the null is rejected (yellow line) is consistently above the line for all tests (purple line), and both are increasing with the true value of μ.
+* The sample average of μ̂ across tests for which the null is rejected does not equal to the true value of μ when the true value of μ is small. As the true value of μ increase, the sample average of μ̂ across tests for which the null is reject is getting closer to the true value and approximately equal to the true value when the true value is equal and above 4. 
+* This is because, when the true value of μ is small,there's magnitude error, which is rejecting null hypothesis base on random chance or sampling variability. Therefore the the average estimate from these samples is biased upwards. And when the true value of μ is large, the power of the test becomes high, and the sample estimates of μ are more consistently close to the true μ. 
