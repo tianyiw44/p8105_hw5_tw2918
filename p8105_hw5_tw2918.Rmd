@@ -167,10 +167,10 @@ longit_study_df |>
 
 ```{r}
 longit_study_df |>
-  ggplot(aes(x = week, y = observation, color = arm)) +
+  ggplot(aes(x = week, y = observation, color = subject_id)) +
   geom_point() +
   geom_line() +
-  geom_smooth(method = "loess", se = FALSE) +
+  facet_grid(~arm)
   labs(
     title = "Obsservation on Each Subject Over Time ",
     x = "Time in Week",
