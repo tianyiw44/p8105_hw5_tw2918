@@ -182,3 +182,31 @@ longit_study_df |>
 *comment on differences between groups*
 
 * The starting observation value in week 1 is similar and mixed between the two arms. The observation value increases for the experimental arm over time and is higher than the control arm starting in week 2. The observation value for control group stayed stable aover time from week1 to week 8. 
+
+## Problem 3
+
+### set design elements and function
+
+```{r}
+n = 30
+sigma = 5
+mu = 0
+num_simulations = 5000
+alpha = 0.05
+set.seed(1)
+
+
+sim_ttest = function (n=30, mu=0, sigma=5) {
+  
+  sample = rnorm (n, mean = mu, sd = sigma)
+  t_test = t.test(sample, mu=mu)
+  result = broom::tidy(t_test) |>
+    select(estimate, p.value)
+  
+}
+
+sim_results = map_dfr(1:num_simulations, ~ sim_ttest())
+
+```
+
+
