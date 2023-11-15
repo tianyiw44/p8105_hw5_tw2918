@@ -55,7 +55,8 @@ homicide_df = read_csv("./data/homicide-data.csv") |>
 
 ```{r}
 homicide_df = homicide_df |>
-  mutate(city_state = paste(city, state, sep = ", "))
+  mutate(city_state = paste(city, state, sep = ", "))|>
+  filter(city_state != "Tulsa, AL") 
 
 homicide_disposition = homicide_df|>
   group_by(city_state)|>
